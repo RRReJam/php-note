@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        .clearfix::before,
+        .clearfix::after {
+            content: '';
+            visibility: hidden;
+            clear: both;
+            line-height: 0;
+            height: 0;
+            display: block;
+        }
+        .clearfix {
+            zoom: 1;
+        }
+        .mes{
+            float: left;
+        }
+        .mes a{
+            float: left;
+            text-decoration: none;
+            background-color: hotpink;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 25px;
+            line-height: 50px;
+            color: white;
+        }
+        .mes p:before{
+            content: '';
+            position: absolute;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right: 6px solid skyblue;
+            left: -5px;
+            top: 15px;
+        }
+        .mes p{
+            max-width: 300px;
+            min-height: 28px;
+            margin: 0 10px;
+            padding: 10px 10px;
+
+            border-radius: 10px;
+            word-break: break-all;
+            position: relative;
+            line-height: 28px;
+            font-weight: 400;
+            font-family: '微软雅黑';
+            color: white;
+            font-size: 20px;
+            background-color: skyblue;
+
+
+        }
+        .container {
+            margin: 50px auto 0;
+            width: 800px;
+            height: 500px;
+            border: 1px solid skyblue;
+            border-radius: 10px;
+        }
+        .message {
+            border-bottom: 1px solid skyblue;
+            height: 400px;
+            overflow-y: scroll;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: all 2s;
+        }
+        .inputBox{
+            width: 500px;
+            height: 60px;
+            border: 1px solid #cccccc;
+            margin-top: 20px;
+            margin-left: 20px;
+            font-size: 30px;
+        }
+        .sendButton{
+            width: 150px;
+            height: 80px;
+            border-radius: 10px;
+            background-color: #99FF99;
+            font-size: 40px;
+            color: white;
+            margin-top: 10px;
+            margin-right: 50px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="message" class="message" >
+        <div class="clearfix mes" style="width: 100%;margin-top: 10px">
+            <a href="#" >机</a>
+            <p style="float: left;">开始聊天吧！</p>
+        </div>
+
+    </div>
+
+
+<div id="send">
+    <input type="text" class='inputBox mesbot'>
+    <input type="button" class='sendButton' style="float: right" value='发 送'>
+</div>
+</div>
+
+<div id='hidden_self' class="self clearfix mes" style='display:none;width: 100%;margin-top: 10px'>
+
+    <a href="#" style="float: left">人</a>
+    <p style="float: left">123213</p>
+
+</div>
+
+</body>
+</html>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+
+<script>
+    // 自己的js代码
+    $(function () {
+        $(".sendButton").click(function () {
+            // 创建自己的聊天框
+            // 每次克隆第一个
+            var $cloneSelf = $(".self").first().clone();
+            // 添加到容器中
+            $('.message').append($cloneSelf);
+            $cloneSelf.show();
+            // 获取输入框的内容 设置给克隆的 元素内部的 p标签
+            $cloneSelf.find('p').html($('.inputBox').val());
+
+            // ajax请求
+            //1.创建对象
+            var xhr = new XMLHttpRequest();
+            //2.设置请求行(get请求数据写在url后面)
+            xhr.open('post', 'http://openapi.tuling123.com/openapi/api/v2');
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            //3.设置请求头(get请求可以省略,post不发送数据也可以省略)
+            //3.5注册回调函数
+            xhr.onload = function () {
+
+                var botres = JSON.parse(xhr.responseText)
+                var botjs = botres.results[0].values.text
+                // 克隆机器人的聊天框
+                var $cloneRobot = $('.mes').first().clone();
+                $cloneRobot.appendTo('.message');
+                $cloneRobot.find('p').html(botjs);
+            }
+
+
+            var data = {
+                "perception": {
+                    "inputText": {
+                        "text": document.querySelector('input[type=text]').value
+
+                    }
+                },
+                "userInfo": {
+                    "apiKey": "97197784faa84bdc85c9edc9456a08a4",
+                    "userId": "123"
+                }
+
+
+            };
+            var datajson = JSON.stringify(data)
+
+            //4.请求主体发送(get请求为空，或者写null，post请求数据写在这里，如果没有数据，直接为空或者写null)
+            xhr.send(datajson);
+        })
+    })
+
+</script>

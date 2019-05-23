@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="bt1">this</button>
+<p></p>
+</body>
+</html>
+<script>
+    document.getElementById("bt1").onclick = function (ev) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("post","postajax.php")
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.onload = function (ev1) {
+                console.log(xhr.responseText)
+                document.querySelector("p").innerHTML = xhr.responseText
+            }
+            xhr.send("name=mj&song=man in the mirror")
+
+    }
+</script>

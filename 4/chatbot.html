@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            width: 500px;
+            margin: 0 auto;
+
+        }
+
+    </style>
+</head>
+<body>
+<input type="text" name="mesg" placeholder="请输入信息">
+<button id="btn1">发送</button>
+<h2>聊天框</h2>
+<div class="container">
+<ul id="my"></ul>
+</div>
+</body>
+</html>
+<script>
+    document.getElementById("btn1").onclick = function (ev) {
+        var myli =document.createElement("li");
+        myli.innerHTML = document.querySelector("input[type=text]").value;
+
+        document.getElementById('my').appendChild(myli);
+        var xhr = new XMLHttpRequest();
+        xhr.open('get','chatdata.php');
+        xhr.onload = function (ev1) {
+            console.log(xhr.responseText)
+            var herli = document.createElement('li');
+            herli.innerHTML = xhr.responseText;
+
+            document.getElementById('my').appendChild(herli);
+        };
+        xhr.send(null);
+
+    }
+
+</script>
